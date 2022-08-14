@@ -22,10 +22,9 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"strings"
 
-	"github.com/ezotaka/gorun/ezast"
+	"github.com/ezotaka/gorun/gorun"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -42,61 +41,8 @@ func main() {
 		*file = *file + ".go"
 	}
 
-	ast, err := convert(*file, *fn)
+	err := gorun.Exec(*file, *fn)
 	if err != nil {
 		fmt.Println(err)
-		return
 	}
-
-	tmpFile, cleaner, err := ast.SaveTemp()
-	defer cleaner()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	err = goRun(tmpFile)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-}
-
-// Convert the source code so that it can be executed with the 'go run' command
-func convert(file, fn string) (*ezast.AstFile, error) {
-	ast, err := ezast.NewAstFile(file)
-	if err != nil {
-		return nil, err
-	}
-
-	if !ast.ContainsFunc(fn) {
-		return nil, fmt.Errorf("file '%s' has no func '%s'", file, fn)
-	}
-
-	err = ast.ChangePackage("main")
-	if err != nil {
-		return nil, err
-	}
-
-	err = ast.SwapSimpleFuncs(fn, "main", false)
-	if err != nil {
-		return nil, err
-	}
-
-	return ast, nil
-}
-
-func goRun(path string) error {
-	if _, err := exec.LookPath("go"); err != nil {
-		return err
-	}
-
-	cmd := exec.Command("go", "run", path)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-
-	return nil
 }
