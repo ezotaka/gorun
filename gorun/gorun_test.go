@@ -25,7 +25,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ezotaka/gorun/ezast"
+	"github.com/ezotaka/golib/ezast"
 )
 
 func getStdout(t *testing.T, fn func()) string {

@@ -25,7 +25,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/ezotaka/gorun/ezast"
+	"github.com/ezotaka/golib/ezast"
 )
 
 // Execute func 'fn' in 'file' using 'go run' shell command.
@@ -44,7 +44,7 @@ func Exec(file, fn string) error {
 		return err
 	}
 
-	tmpFile, cleaner, err := ast.SaveTemp()
+	tmpFile, cleaner, err := ast.SaveTemp("main.go")
 	defer cleaner()
 	if err != nil {
 		return err
