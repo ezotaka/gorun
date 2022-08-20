@@ -10,6 +10,6 @@ func test1() {
 	fmt.Println("test1")
 }
 
-func test2() {
-	fmt.Println("test2")
+func test2(s string) {
+	fmt.Println(s)
 }

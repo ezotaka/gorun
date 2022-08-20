@@ -66,8 +66,13 @@ func Exec(goFilePath, fn string) error {
 		return err
 	}
 
-	if !ast.ContainsFunc(fn) {
+	fd := ast.GetFuncDecl(fn)
+	if fd == nil {
 		return fmt.Errorf("file '%s' has no func '%s'", goFilePath, fn)
+	}
+
+	if len(fd.Type.Params.List) > 0 {
+		return fmt.Errorf("func '%s' must have no args", fn)
 	}
 
 	// TODO: it does not work if package of goFile path includes func TestMain

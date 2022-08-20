@@ -72,12 +72,21 @@ func TestExec(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Run func test1 in package testdata",
+			name: "exec func test1 in package testdata",
 			args: args{
 				file: "testdata/src1.go",
 				fn:   "test1",
 			},
 			want: "test1",
+		},
+		{
+			name: "cannot exec test2, because it has args",
+			args: args{
+				file: "testdata/src1.go",
+				fn:   "test2",
+			},
+			want:    "func 'test2' must have no args",
+			wantErr: true,
 		},
 		{
 			name: "absolute file path",
